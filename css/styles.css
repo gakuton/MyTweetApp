@@ -1,0 +1,78 @@
+body {
+    font-size: 16px;
+    font-family: Verdana, sans-serif;
+    background-color: #eee;
+}
+
+.container {
+    width: 400px;
+    margin: auto;
+}
+
+.container h1 {
+    font-size: 24px;
+    border-bottom: 1px solid #ddd;   
+    padding: 16px 0;
+}
+
+.container h2 {
+    font-size: 16px;
+    margin: 3rem 0 0.5rem;
+}
+
+.CardBase {
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+}
+
+.CardBase h2 {
+    display: inline;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.CardBase .delete {
+    float: right;
+    cursor: pointer;
+}
+
+.CardBase p {
+    margin: 0.5rem 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.CardBase .date {
+    font-size: 0.75rem;
+    color: #9297A8;
+}
+
+/* フォーム */
+.container form label {
+    margin-top: 1rem;
+}
+
+.container form input {
+    display: block;
+    width: 12.5rem;
+    height: 1.5rem;
+    border: 1px solid #ccc;   
+    border-radius: 4px;
+}
+
+.container form textarea {
+    width: 25rem;
+    height: 3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.container form input[type="submit"] {
+    margin-top: 0.5rem;
+    height: 2rem;
+    background-color: #ddd;
+    border-radius: 4px;
+}

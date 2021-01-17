@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>つぶやきがくと</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        (() => {
+            const tweets = [];
+
+            function TweetItem(props) {
+                return (
+                    <div key={props.tweet.date} className="CardBase">
+                        <h2>{props.tweet.title}</h2>
+                        <span className="delete" onClick={() => props.deleteTweet(props.tweet)}><img src="img/clear.svg"/></span>
+                        <p>{props.tweet.sentence}</p>
+                        <span className="date">{props.tweet.date}</span>
+                    </div>
+                );
+            }
+
+            function TweetList(props) {
+                const tweets = props.tweets.map(tweet => {
+                    return (
+                        <TweetItem 
+                            key={tweet.date}
+                            tweet={tweet}
+                            deleteTweet={props.deleteTweet}
+                        />
+                    );
+                });
+                return (
+                    <div>
+                        {props.tweets.length ? tweets : <p>つぶやきはありません</p>}
+                    </div>
+                );
+            }
+
+            function TweetForm(props) {
+                return (
+                    <div>
+                        <h2>
+                            つぶやきを追加
+                        </h2>
+                        <form name="addtweet" onSubmit={props.addTodo}>
+                            <label>
+                                タイトル
+                                <input name="tweettitle" type="text" value={props.title} onChange={props.updateItem}/>
+                            </label>
+                            <label>
+                                本文
+                                <textarea name="tweetsentence" onChange={props.updateItem} value={props.sentence}></textarea>
+                            </label>
+                            <input type="submit" value="つぶやく"/>
+                        </form>
+                    </div>
+                );
+            }
+
+            function getDate() {
+                // return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
+                const time = new Date();
+                const year = time.getFullYear();
+                const month = time.getMonth()+1;
+                const date = time.getDate();
+                const hour = time.getHours();
+                const min = time.getMinutes();
+                const sec = time.getSeconds();          
+
+                return year + '/' + month + '/' + date + ' ' + hour + '時' + min + '分' + sec + '秒';
+            }
+
+            class App extends React.Component {
+                constructor() {
+                    super();
+                    this.state = {
+                        tweets: tweets,
+                        title: '',
+                        sentence: '',
+                        date: ''
+                    };
+                    this.deleteTweet = this.deleteTweet.bind(this);
+                    this.updateItem = this.updateItem.bind(this);
+                    this.addTodo = this.addTodo.bind(this);
+                }
+
+                addTodo(e) {
+                    e.preventDefault();
+
+                    if(this.state.title.trim() === '' || this.state.sentence.trim() === '') {
+                        return;
+                    }
+
+                    const item = {
+                        date: getDate(),
+                        title: this.state.title,
+                        sentence: this.state.sentence
+                    };
+
+                    const tweets = this.state.tweets.slice();
+                    tweets.push(item);
+                    this.setState({
+                        tweets: tweets,
+                        title: '',
+                        sentence: '',
+                    });
+                }
+
+                deleteTweet(tweet) {
+                    if (!confirm('are you sure?')) {
+                        return;
+                    }
+
+                    const tweets = this.state.tweets.slice();
+                    const pos = this.state.tweets.indexOf(tweet);
+
+                    tweets.splice(pos, 1);
+                    this.setState({
+                        tweets: tweets
+                    });
+                }
+
+                updateItem(e) {
+                    this.setState({
+                        title: document.addtweet.tweettitle.value,
+                        sentence: document.addtweet.tweetsentence.value
+                    });
+                }
+
+                componentDidUpdate() {
+                    localStorage.setItem('tweets', JSON.stringify(this.state.tweets));
+                }
+
+                componentDidMount() {
+                    this.setState({
+                     tweets: JSON.parse(localStorage.getItem('tweets')) || []
+                    });
+                }
+
+
+
+                render() {
+                    return (
+                        <div className="container">
+                            <h1>つぶやきがくと</h1>
+                            <TweetList 
+                                tweets={this.state.tweets}
+                                deleteTweet={this.deleteTweet}
+                            />
+                            <TweetForm
+                                title={this.state.title}
+                                sentence={this.state.sentence}
+                                updateItem={this.updateItem}
+                                addTodo={this.addTodo}
+                            />
+                        </div>
+                    );
+                }
+            }
+
+            ReactDOM.render(
+                <App/>,
+                document.getElementById('root')
+            );
+        })();
+    </script>
+</body>
+</html>
